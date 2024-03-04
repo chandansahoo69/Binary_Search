@@ -1,0 +1,295 @@
+export default {
+    btnContainedSm: {
+        borderRadius: '8px',
+        height: '33px',
+        fontWeight: '600',
+        fontSize: '14px',
+        textTransform: 'capitalize',
+        padding: '8px 20px',
+    },
+    testingBox: {
+        paddingTop: '65px !important',
+        paddingBottom: '0px !important',
+        paddingLeft: '0px !important',
+        paddingRight: '0px !important',
+        overflow: 'hidden !important',
+        position: 'fixed !important',
+        width: '100% !important',
+        height: '100% !important',
+    },
+    btnOutlinedSm: {
+        borderRadius: '8px',
+        height: '33px',
+        fontFamily: 'Montserrat',
+        fontWeight: '600',
+        fontSize: '14px',
+        textTransform: 'capitalize',
+        color: '#0A68FF',
+        borderColor: '#0A68FF',
+        padding: '8px',
+    },
+
+    btn: {
+        borderRadius: '16px',
+        height: '48px',
+        fontFamily: 'Montserrat',
+        fontWeight: '600',
+        fontSize: '16px',
+        textTransform: 'capitalize',
+    },
+    btnOutlined: {
+        borderRadius: '16px',
+        height: '48px',
+        // fontFamily: 'Montserrat',
+        fontWeight: '600',
+        fontSize: '16px',
+        textTransform: 'capitalize',
+        borderColor: '#0A68FF',
+        color: '#0A68FF',
+    },
+    card: {
+        display: 'flex',
+        flexDirection: 'column',
+        background: '#FFFFFF',
+        padding: '14px 24px',
+        boxShadow: '0px 0px 16px 1px rgba(9, 46, 105, 0.15)',
+        borderRadius: '24px!important',
+        flex: 'none',
+        order: 0,
+        flexGrow: 0,
+        position: 'inherit',
+    },
+    accordion: {
+        display: 'flex',
+        flexDirection: 'column',
+        background: '#FFFFFF',
+        padding: '6px 14px',
+        boxShadow: '0px 0px 5px 1px rgba(9, 46, 105, 0.15)',
+        borderRadius: '20px!important',
+        flex: 'none',
+        order: 0,
+        flexGrow: 0,
+        position: 'inherit',
+    },
+    modal: {
+        position: 'absolute',
+        top: '15%',
+        left: '25%',
+        // transform: 'translate(-50%, -50%)',
+        bgcolor: 'background.paper',
+        boxShadow: '0px 0px 16px 1px rgba(9, 46, 105, 0.15)',
+        borderRadius: '24px',
+        paddingLeft: 4,
+        paddingRight: 4,
+        minHeight: '450px',
+        width: '50%',
+        outline: 'none',
+    },
+    modalBg: { backgroundColor: 'rgba(0,0,0,0.1)' },
+    inputLabel: {
+        color: '#000F28',
+        fontWeight: 500,
+        fontSize: '16px',
+        marginBottom: '12px',
+    },
+    datePickerInput: {
+        width: '100%',
+        height: '42px',
+        borderRadius: '8px',
+        border: 'none',
+        outline: 'none',
+        padding: '0px 0px 0px 16px',
+        backgroundColor: 'input.box',
+    },
+    mb10: {
+        marginBottom: '10px',
+    },
+    mb20: {
+        marginBottom: '20px',
+    },
+    marginLeft30: {
+        marginLeft: '30px',
+    },
+    marginLeft20: {
+        marginLeft: '20px',
+    },
+    badgeStyle: {
+        backgroundColor: '#0A68FF',
+        color: '#fff',
+        fontFamily: 'Montserrat',
+    },
+    tableHead: {
+        fontSize: '16px',
+        backgroundColor: 'table.head',
+        color: 'table.heading',
+    },
+    bgWhite: {
+        backgroundColor: '#fff',
+    },
+    listAvatar: { minWidth: 0, marginRight: '10px' },
+    avatarName: {
+        color: '#000F28',
+        fontWeight: '500',
+    },
+    avatarSubHead: {
+        fontSize: '14px',
+        lineHeight: '17px',
+        color: '#848D96',
+    },
+    chip: {
+        background: 'rgba(10, 104, 255, 0.1)',
+        border: '0.6px solid #0A68FF',
+        borderRadius: '8px',
+        color: '#000F28',
+        fontWeight: '500',
+    },
+    tabsStyle: {
+        '& .MuiTabs-indicator': {
+            display: 'flex',
+            justifyContent: 'center',
+            backgroundColor: 'transparent',
+            height: '6px',
+            borderRadius: '8px',
+            border: '0.5px solid #0A68FF',
+        },
+        '& .MuiTabs-indicatorSpan': {
+            width: '100%',
+            backgroundColor: '#0A68FF',
+        },
+    },
+    tabHead: { padding: '25px', fontWeight: '600' },
+    fs14Dark: { color: '#000F28', fontSize: '14px' },
+    taskModal: {
+        position: 'absolute',
+        top: '10%',
+        left: '12%',
+        bgcolor: 'background.paper',
+        boxShadow: '0px 0px 16px 1px rgba(9, 46, 105, 0.15)',
+        borderRadius: '24px',
+        paddingLeft: 4,
+        paddingRight: 4,
+        minHeight: '600px',
+        width: '75%',
+        outline: 'none',
+    },
+    taskModalIcons: {
+        fontSize: '1.5rem',
+        cursor: 'pointer',
+        color: '#848d96',
+    },
+    select: {
+        backgroundColor: '#0a68ff',
+        height: '2rem',
+        color: '#fff',
+        '.MuiSelect-icon': {
+            color: 'white',
+        },
+        '.MuiSelect-outlined': {
+            color: 'white',
+        },
+        '& .MuiOutlinedInput-notchedOutline': {
+            border: 'none',
+        },
+    },
+    taskHeaderList: {
+        paddingTop: '10px',
+        fontWeight: '600',
+        paddingLeft: '2rem',
+        color: 'text.primary',
+    },
+    modalInput: {},
+    settingSelect: {
+        backgroundColor: 'input.box',
+        height: '2.5rem',
+        borderRadius: '10px',
+        width: '100%',
+        color: 'input.text',
+        '.MuiSelect-icon': {
+            color: 'input.text',
+        },
+        '.MuiSelect-outlined': {
+            color: 'input.text',
+        },
+        '& .MuiOutlinedInput-notchedOutline': {
+            border: 'none',
+        },
+    },
+    modalTitle: {
+        fontSize: '1.5rem',
+        fontWeight: 600,
+        lineHeight: '39.01px',
+        color: '#092e69',
+    },
+    boardModalMenuItem: {
+        width: '100%',
+        padding: '5px 20px',
+        cursor: 'pointer',
+        color: 'text.secondary',
+        transition: 'background-color .3s ease-in-out',
+        '&:hover': {
+            backgroundColor: 'action.hover',
+        },
+    },
+
+    /* side-menu */
+    sidemenuItemWrapper: {
+        transition: 'background-color 0.3s ease-in-out',
+        '&:hover': {
+            backgroundColor: 'action.hover',
+        },
+    },
+
+    /* concourse-page */
+    concourseBoxContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+        padding: '10px 10px',
+        borderBottom: '2px solid #f3f5f9',
+        transition: 'all 0.2s ease-in-out',
+        borderRadius: '6px',
+        cursor: 'pointer',
+        '&:hover': {
+            backgroundColor: 'action.hover',
+        },
+    },
+
+    /* document-navbar */
+    iconButton: {
+        backgroundColor: 'red',
+        fontSize: '10rem',
+        '&:hover': {
+            backgroundColor: 'action.hover',
+        },
+    },
+
+    /* document-page */
+    documentContainer: {
+        backgroundColor: 'background.paper',
+        height: '100%',
+    },
+    documentNavbar: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        height: '5rem',
+        padding: '1rem 2rem',
+    },
+    documentNavbarLeftBox: { display: 'flex', alignItems: 'center', gap: '.5rem' },
+    profileBox: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        padding: '5px 5px',
+        borderBottom: '1px solid border',
+        cursor: 'pointer',
+    },
+    editorContainer: {
+        height: 'calc(100% - 5rem)',
+        overflowY: 'auto',
+        padding: '2rem 0',
+        backgroundColor: 'background.paper',
+        borderBottom: '2px solid background.secondary',
+    },
+};
