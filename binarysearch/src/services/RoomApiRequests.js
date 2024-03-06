@@ -27,3 +27,8 @@ export const getRoom = async (args) => {
     const response = await privateApi.get(`/room/get-room/${args}`);
     return response;
 };
+
+export const searchUsers = async (args) => {
+    const response = await privateApi.get(`/users/search?user=${args}`);
+    return response;
+};

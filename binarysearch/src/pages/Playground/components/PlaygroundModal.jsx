@@ -1,9 +1,10 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import {
     Box,
     IconButton,
     ListItemButton,
     MenuItem,
+    Popover,
     Select,
     Stack,
     TextField,
@@ -11,11 +12,11 @@ import {
     useTheme,
 } from '@mui/material';
 import { ReactModal } from 'components/organism';
-import { useResponsive, useToast } from 'hooks';
+import { useDebounce, useResponsive, useToast } from 'hooks';
 import { CustomButton, ReactIcon } from 'components/molecules';
 import CustomInput from 'components/molecules/CustomInput/CustomInput';
 import { uniqueNamesGenerator, adjectives } from 'unique-names-generator';
-import { createRoom } from 'services/RoomApiRequests';
+import { createRoom, searchUsers } from 'services/RoomApiRequests';
 import {
     DatePicker,
     LocalizationProvider,
@@ -79,6 +80,8 @@ export const PlaygroundModal = ({ open, handleClose }) => {
     const [startDate, setStartDate] = useState('');
     const [startTime, setStartTime] = useState('');
     const [noOfQuestions, setNoOfQuestions] = useState(1);
+    const [search, setSearch] = useState('');
+    const debouncedSearch = useDebounce(search);
 
     const tabs = [
         { title: 'public', icon: 'uiw:global' },
@@ -103,6 +106,11 @@ export const PlaygroundModal = ({ open, handleClose }) => {
         setTab(newTab);
     };
 
+    const handleSearchChange = (event) => {
+        setSearch(event.target.value);
+        // handleClick(event);
+    };
+
     // Function to format time
     const formatTime = (time) => {
         if (!time) return ''; // return empty string if time is null or undefined
@@ -112,6 +120,21 @@ export const PlaygroundModal = ({ open, handleClose }) => {
         const formattedHours = hours % 12 || 12; // convert 24-hour format to 12-hour format
         return formattedHours + ':' + minutes + ' ' + amPm; // format HH:MM AM/PM
     };
+
+    useEffect(() => {
+        const searchUserSuggestions = async () => {
+            if (!debouncedSearch) return;
+
+            try {
+                const { data } = await searchUsers(debouncedSearch);
+                console.log('searchUserSuggestions', data.users);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        searchUserSuggestions();
+    }, [debouncedSearch]);
 
     const handleCreateRoom = async () => {
         const args = {
@@ -145,6 +168,18 @@ export const PlaygroundModal = ({ open, handleClose }) => {
         setStartDate(formatedDate);
         setStartTime('');
     };
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClosePopover = () => {
+        setAnchorEl(null);
+    };
+
+    const id = Boolean(anchorEl) ? 'simple-popover' : undefined;
 
     return (
         <>
@@ -271,23 +306,6 @@ export const PlaygroundModal = ({ open, handleClose }) => {
                                 </LocalizationProvider>
                             </div>
                         </div>
-                        <Select
-                            sx={{
-                                '.MuiOutlinedInput-notchedOutline': {
-                                    border: 'none',
-                                },
-                                color: theme.palette.input.text,
-                                backgroundColor: theme.palette.input.box,
-                                border: `1px solid ${theme.palette.popover.border}`,
-                            }}
-                            className="select-input"
-                            value={noOfQuestions}
-                            name="noOfQuestions"
-                            onChange={(e) => setNoOfQuestions(e.target.value)}
-                        >
-                            <MenuItem value={1}>1</MenuItem>
-                            <MenuItem value={2}>2</MenuItem>
-                        </Select>
 
                         <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
                             <CustomInput
@@ -320,40 +338,78 @@ export const PlaygroundModal = ({ open, handleClose }) => {
                         </div>
 
                         {tab === 1 && (
-                            <div>
+                            <>
                                 <CustomInput
-                                    name={'playground'}
-                                    value={playground}
-                                    onChange={handleInputChange}
+                                    name={'search'}
+                                    value={search}
+                                    aria-describedby={id}
+                                    // onClick={handleClick}
+                                    onChange={handleSearchChange}
                                     borderRadius={'8px'}
                                     width={'100%'}
                                     placeholder={'How about doctor-steven-strange?'}
                                 />
-                            </div>
+                                <Popover
+                                    id={id}
+                                    open={Boolean(anchorEl)}
+                                    anchorEl={anchorEl}
+                                    onClose={handleClosePopover}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'left',
+                                    }}
+                                >
+                                    <Typography sx={{ p: 2 }}>
+                                        The content of the Popover.
+                                    </Typography>
+                                </Popover>
+                                {/* <div style={{ backgroundColor: 'grey' }}>
+                                    <Typography>Search User Suggestions</Typography>
+                                </div> */}
+                            </>
                         )}
 
-                        <div className="playground-modal-dificulty-container">
-                            {tags.map((tag) => (
-                                <ListItemButton
-                                    key={tag?.title}
-                                    className="playground-modal-dificulty-item"
-                                    style={{
-                                        backgroundColor: theme.palette.tags[tag.title],
-                                        color: theme.palette.common.white,
-                                    }}
-                                    onClick={() => setDifficulty(tag.title)}
-                                >
-                                    {difficulty === tag.title && (
-                                        <ReactIcon
-                                            icon={'lets-icons:check-fill'}
-                                            color={theme.palette.common.white}
-                                            height={25}
-                                            width={25}
-                                        />
-                                    )}
-                                    <Typography>&nbsp;{tag.title}</Typography>
-                                </ListItemButton>
-                            ))}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                            <Select
+                                sx={{
+                                    '.MuiOutlinedInput-notchedOutline': {
+                                        border: 'none',
+                                    },
+                                    color: theme.palette.input.text,
+                                    backgroundColor: theme.palette.input.box,
+                                    border: `1px solid ${theme.palette.popover.border}`,
+                                }}
+                                className="select-input"
+                                value={noOfQuestions}
+                                name="noOfQuestions"
+                                onChange={(e) => setNoOfQuestions(e.target.value)}
+                            >
+                                <MenuItem value={1}>1</MenuItem>
+                                <MenuItem value={2}>2</MenuItem>
+                            </Select>
+                            <div className="playground-modal-dificulty-container">
+                                {tags.map((tag) => (
+                                    <ListItemButton
+                                        key={tag?.title}
+                                        className="playground-modal-dificulty-item"
+                                        style={{
+                                            backgroundColor: theme.palette.tags[tag.title],
+                                            color: theme.palette.common.white,
+                                        }}
+                                        onClick={() => setDifficulty(tag.title)}
+                                    >
+                                        {difficulty === tag.title && (
+                                            <ReactIcon
+                                                icon={'lets-icons:check-fill'}
+                                                color={theme.palette.common.white}
+                                                height={25}
+                                                width={25}
+                                            />
+                                        )}
+                                        <Typography>&nbsp;{tag.title}</Typography>
+                                    </ListItemButton>
+                                ))}
+                            </div>
                         </div>
 
                         <div className="playground-modal-time-container-wrapper">
