@@ -276,6 +276,20 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, user, "Avatar updated successfully"));
 });
 
+const searchUser = asyncHandler(async (req, res) => {
+  const { user } = req.query;
+
+  if (!user) {
+    throw new ApiError(400, "Search User is required");
+  }
+
+  const users = await User.find({
+    username: { $regex: user, $options: "i" },
+  }).select("username avatar");
+
+  return res.status(200).json({ users, message: "User searched successfully" });
+});
+
 export {
   registerUser,
   loginUser,
@@ -285,4 +299,5 @@ export {
   getCurrentUser,
   updateAccountDetails,
   updateUserAvatar,
+  searchUser,
 };

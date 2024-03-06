@@ -8,6 +8,7 @@ import {
   getCurrentUser,
   updateAccountDetails,
   updateUserAvatar,
+  searchUser,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -27,6 +28,7 @@ router.post("/refresh-token", refreshAccessToken);
 
 // Secure routes
 router.post("/logout", verifyJWT, logoutUser);
+router.get("/search", verifyJWT, searchUser);
 router.post("/change-password", verifyJWT, changeCurrentPassword);
 router.get("/current-user", verifyJWT, getCurrentUser);
 router.post("/update-account-details", verifyJWT, updateAccountDetails);
