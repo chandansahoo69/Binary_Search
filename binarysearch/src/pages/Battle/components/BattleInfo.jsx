@@ -16,14 +16,23 @@ export const BattleInfo = () => {
     useEffect(() => {
         socket.connect();
 
+        const currentUser = {
+            _id: user?._id,
+            username: user?.username,
+            avatar: user?.avatar,
+            email: user?.email,
+        };
+
         socket.on('update', (message, users) => {
             console.log('update -> ', message, users);
             setUsers(users);
         });
 
-        socket.emit('joinRoom', roomId, user);
+        socket.emit('joinRoom', roomId, currentUser);
 
         return () => {
+            socket.emit('leaveRoom', roomId, currentUser);
+
             socket.disconnect();
         };
     }, []);
