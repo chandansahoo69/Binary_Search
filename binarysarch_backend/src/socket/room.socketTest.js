@@ -15,18 +15,24 @@ const initializedRoomSocket = (socket) => {
       socket.join(roomId);
 
       if (!roomUserMapping[roomId]) {
-        roomUserMapping[roomId] = [];
+        roomUserMapping[roomId] = new Set();
       }
-      roomUserMapping[roomId].push({ id: socket.id, user });
+
+      // Add the user to the set directly
+      roomUserMapping[roomId].add(user);
 
       socket.roomId = roomId;
 
-      console.log("All users in room: ", roomUserMapping);
+      console.log(
+        "All users in room after joining: ",
+        roomUserMapping,
+        Array.from(roomUserMapping[roomId])
+      );
 
       io.to(roomId).emit(
         "update",
         `User ${user?.username} joined the room`,
-        roomUserMapping[roomId].map(({ user }) => user)
+        Array.from(roomUserMapping[roomId])
       );
     } catch (error) {
       console.log("Error while joining room: ", error);
@@ -34,33 +40,40 @@ const initializedRoomSocket = (socket) => {
     }
   });
 
-  socket.on("disconnect", async () => {
+  socket.on("leaveRoom", async (roomId, user) => {
+    console.log("leaveRoom", roomId, user?.username);
+
     try {
-      const roomId = socket.roomId;
-      const usersInRoom = roomUserMapping[roomId];
-      if (usersInRoom) {
-        // Find the index of the user in the roomUserMapping and remove it
-        const index = usersInRoom.findIndex(({ id }) => id === socket.id);
-        if (index !== -1) {
-          const { user } = usersInRoom.splice(index, 1)[0];
+      socket.leave(roomId);
 
-          socket.leave(roomId);
-
-          io.to(roomId).emit(
-            "update",
-            `User ${user?.username} left the room`,
-            usersInRoom.map(({ user }) => user)
-          );
-
-          console.log("All users in room after disconnect: ", roomUserMapping);
-        }
+      if (roomUserMapping[roomId]) {
+        // Find the user object in the set and delete it
+        roomUserMapping[roomId].forEach((userData) => {
+          if (userData._id === user._id) {
+            roomUserMapping[roomId].delete(userData);
+          }
+        });
       }
-    } catch (error) {
-      return io.emit(
-        "error",
-        "Something went wrong while disconnecting from the room"
+
+      console.log(
+        "All users in room after leaving: ",
+        roomUserMapping,
+        Array.from(roomUserMapping[roomId])
       );
+
+      io.to(roomId).emit(
+        "update",
+        `User ${user?.username} left the room`,
+        Array.from(roomUserMapping[roomId])
+      );
+    } catch (error) {
+      console.log("Error while leaving room: ", error);
+      return io.emit("error", "Something went wrong while leaving the room");
     }
+  });
+
+  socket.on("disconnect", async () => {
+    console.log("user disconnected");
   });
 };
 
