@@ -23,13 +23,11 @@ const createRoom = asyncHandler(async (req, res) => {
     noOfQuestions,
     difficultyLevel,
     challangeTime,
+    invitedUsers,
   } = req.body;
 
   try {
-    console.log("req.user", req.body);
     const questionIds = await generateQuestions(difficultyLevel, noOfQuestions);
-
-    console.log("questionIds", questionIds);
 
     const room = await RoomSchema.create({
       title,
@@ -40,9 +38,8 @@ const createRoom = asyncHandler(async (req, res) => {
       challangeTime,
       questions: questionIds,
       createdBy: req.user._id,
+      invitedUsers,
     });
-
-    // console.log("room created successfully", room);
 
     return res
       .status(200)
@@ -74,7 +71,9 @@ const getRoom = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   try {
-    const room = await RoomSchema.findById(id).select("-connectedUsers -point");
+    const room = await RoomSchema.findById(id).select(
+      "-connectedUsers -point -invitedUsers -ranks -messages -questions"
+    );
 
     res.status(200).json({ success: true, data: room });
   } catch (error) {

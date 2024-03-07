@@ -1,8 +1,14 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import {
+    Avatar,
     Box,
+    ButtonBase,
+    CircularProgress,
     IconButton,
+    List,
     ListItemButton,
+    ListItemIcon,
+    ListItemText,
     MenuItem,
     Popover,
     Select,
@@ -82,6 +88,11 @@ export const PlaygroundModal = ({ open, handleClose }) => {
     const [noOfQuestions, setNoOfQuestions] = useState(1);
     const [search, setSearch] = useState('');
     const debouncedSearch = useDebounce(search);
+    const searchFieldRef = useRef(null);
+    const [loading, setLoading] = useState(false);
+    const [userList, setUserList] = useState([]);
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [anchorEl, setAnchorEl] = React.useState(null);
 
     const tabs = [
         { title: 'public', icon: 'uiw:global' },
@@ -108,7 +119,7 @@ export const PlaygroundModal = ({ open, handleClose }) => {
 
     const handleSearchChange = (event) => {
         setSearch(event.target.value);
-        // handleClick(event);
+        searchFieldRef.current = event.currentTarget;
     };
 
     // Function to format time
@@ -126,9 +137,13 @@ export const PlaygroundModal = ({ open, handleClose }) => {
             if (!debouncedSearch) return;
 
             try {
+                setLoading(true);
+                setAnchorEl(searchFieldRef.current);
                 const { data } = await searchUsers(debouncedSearch);
-                console.log('searchUserSuggestions', data.users);
+                setLoading(false);
+                setUserList(data.users);
             } catch (error) {
+                showToast(error?.message, 'error');
                 console.log(error);
             }
         };
@@ -146,20 +161,22 @@ export const PlaygroundModal = ({ open, handleClose }) => {
             noOfQuestions: noOfQuestions,
             difficultyLevel: difficulty,
             challangeTime: time,
+            invitedUsers: selectedUsers.map((user) => user._id),
         };
 
         try {
-            const validatedArgs = schema.parse(args);
+            schema.parse(args);
 
-            console.log('create room', args, validatedArgs);
-
-            // return;
             await createRoom(args);
             showToast('Room created successfully', 'success');
             handleClose();
         } catch (error) {
-            console.log(error);
-            // showToast(error?.message, 'error');
+            const formattedError = error.format();
+            Object.values(formattedError).forEach((err) => {
+                if (err && err._errors) {
+                    showToast(err._errors, 'error');
+                }
+            });
         }
     };
 
@@ -169,17 +186,37 @@ export const PlaygroundModal = ({ open, handleClose }) => {
         setStartTime('');
     };
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
     const handleClosePopover = () => {
         setAnchorEl(null);
+        searchFieldRef.current = null;
     };
 
-    const id = Boolean(anchorEl) ? 'simple-popover' : undefined;
+    const handleAddUser = (user) => {
+        if (selectedUsers.length >= 5) {
+            showToast('You can only add 4 users', 'error');
+            return;
+        }
+        const userAlreadyExist = selectedUsers.find((item) => item._id === user._id);
+        if (userAlreadyExist) {
+            showToast('User already added', 'error');
+            return;
+        }
+        setSelectedUsers([...selectedUsers, user]);
+        setSearch('');
+        setUserList([]);
+        handleClosePopover();
+    };
+
+    const handleRemoveUser = (user) => {
+        const filteredUsers = selectedUsers.filter((item) => item._id !== user._id);
+        setSelectedUsers(filteredUsers);
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter' || event.key === 'ArrowDown') {
+            setAnchorEl(event.currentTarget);
+        }
+    };
 
     return (
         <>
@@ -314,7 +351,7 @@ export const PlaygroundModal = ({ open, handleClose }) => {
                                 onChange={handleInputChange}
                                 borderRadius={'8px'}
                                 width={'100%'}
-                                placeholder={'How about doctor-steven-strange?'}
+                                placeholder={'How about doctor-steven-strange'}
                             />
 
                             <IconButton
@@ -338,35 +375,135 @@ export const PlaygroundModal = ({ open, handleClose }) => {
                         </div>
 
                         {tab === 1 && (
-                            <>
+                            <div style={{ width: '100%' }}>
+                                {selectedUsers.length !== 0 && (
+                                    <div
+                                        style={{
+                                            padding: '10px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            flexWrap: 'wrap',
+                                            gap: '6px',
+                                        }}
+                                    >
+                                        {selectedUsers.map((user, index) => (
+                                            <div
+                                                key={index}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '10px',
+                                                    padding: '5px',
+                                                    backgroundColor:
+                                                        theme.palette.container.secondary,
+                                                    borderRadius: '25px',
+                                                }}
+                                            >
+                                                <Avatar
+                                                    alt="User Image"
+                                                    sx={{
+                                                        width: '25px',
+                                                        height: '25px',
+                                                        border: `2px solid ${theme.palette.primary.main}`,
+                                                    }}
+                                                    src={user?.avatar}
+                                                />
+                                                <Typography>{user?.username}</Typography>
+                                                <ButtonBase onClick={() => handleRemoveUser(user)}>
+                                                    <ReactIcon
+                                                        icon={'ic:round-close'}
+                                                        color={theme.palette.icon.secondary}
+                                                        sx={{ marginRight: 0.8 }}
+                                                        height={18}
+                                                        width={18}
+                                                    />
+                                                </ButtonBase>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                                 <CustomInput
                                     name={'search'}
                                     value={search}
-                                    aria-describedby={id}
-                                    // onClick={handleClick}
+                                    aria-describedby={
+                                        Boolean(anchorEl) ? 'simple-popover' : undefined
+                                    }
                                     onChange={handleSearchChange}
                                     borderRadius={'8px'}
                                     width={'100%'}
-                                    placeholder={'How about doctor-steven-strange?'}
+                                    placeholder={'Search users by username'}
+                                    onKeyDown={handleKeyDown}
                                 />
                                 <Popover
-                                    id={id}
-                                    open={Boolean(anchorEl)}
+                                    id={Boolean(anchorEl) ? 'simple-popover' : undefined}
+                                    open={Boolean(anchorEl) && search !== ''}
                                     anchorEl={anchorEl}
                                     onClose={handleClosePopover}
                                     anchorOrigin={{
                                         vertical: 'bottom',
                                         horizontal: 'left',
                                     }}
+                                    PaperProps={{
+                                        sx: {
+                                            p: 0,
+                                            width: 250,
+                                            height: 300,
+                                            backgroundColor: theme.palette.popover.background,
+                                            border: `1px solid ${theme.palette.popover.border}`,
+                                            boxShadow: theme.shadows[0],
+                                            '& .MuiMenuItem-root': {
+                                                typography: 'body2',
+                                                borderRadius: 0.75,
+                                            },
+                                        },
+                                    }}
                                 >
-                                    <Typography sx={{ p: 2 }}>
-                                        The content of the Popover.
-                                    </Typography>
+                                    {loading ? (
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                height: '100px',
+                                            }}
+                                        >
+                                            <CircularProgress />
+                                        </div>
+                                    ) : (
+                                        <List>
+                                            {userList.length !== 0 ? (
+                                                <>
+                                                    {userList.map((user, index) => (
+                                                        <ListItemButton
+                                                            key={index}
+                                                            onClick={() => handleAddUser(user)}
+                                                        >
+                                                            <ListItemIcon>
+                                                                <Avatar
+                                                                    alt="User Image"
+                                                                    sx={{
+                                                                        border: `2px solid ${theme.palette.primary.main}`,
+                                                                    }}
+                                                                    src={user?.avatar}
+                                                                />
+                                                            </ListItemIcon>
+                                                            <ListItemText
+                                                                primary={user?.username}
+                                                            />
+                                                        </ListItemButton>
+                                                    ))}
+                                                </>
+                                            ) : (
+                                                <Typography
+                                                    sx={{ textAlign: 'center', marginTop: '10px' }}
+                                                >
+                                                    No user found
+                                                </Typography>
+                                            )}
+                                        </List>
+                                    )}
                                 </Popover>
-                                {/* <div style={{ backgroundColor: 'grey' }}>
-                                    <Typography>Search User Suggestions</Typography>
-                                </div> */}
-                            </>
+                            </div>
                         )}
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
