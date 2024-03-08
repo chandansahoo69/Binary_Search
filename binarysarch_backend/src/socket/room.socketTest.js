@@ -71,10 +71,6 @@ const initializedRoomSocket = (socket) => {
       return io.emit("error", "Something went wrong while leaving the room");
     }
   });
-
-  socket.on("disconnect", async () => {
-    console.log("user disconnected");
-  });
 };
 
 export { initializedRoomSocket };

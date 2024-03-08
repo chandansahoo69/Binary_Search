@@ -2,13 +2,14 @@ import React from 'react';
 import { CustomButton, ReactIcon } from 'components/molecules';
 import { IconButton, useTheme } from '@mui/material';
 import { useToast } from 'hooks';
+import copy from 'copy-to-clipboard';
 
 export const BattleInfoActionButton = ({ setIsOpenChat }) => {
     const theme = useTheme();
     const { showToast } = useToast();
 
     const copyToClipboard = () => {
-        // copy(window.location.href);
+        copy(window.location.href);
         showToast('URL copied to clipboard', 'success');
     };
 
