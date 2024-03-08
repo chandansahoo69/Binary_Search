@@ -23,11 +23,7 @@ const initializedRoomSocket = (socket) => {
 
       socket.roomId = roomId;
 
-      console.log(
-        "All users in room after joining: ",
-        roomUserMapping,
-        Array.from(roomUserMapping[roomId])
-      );
+      console.log("All users in room after joining: ", roomUserMapping);
 
       io.to(roomId).emit(
         "update",
@@ -55,11 +51,7 @@ const initializedRoomSocket = (socket) => {
         });
       }
 
-      console.log(
-        "All users in room after leaving: ",
-        roomUserMapping,
-        Array.from(roomUserMapping[roomId])
-      );
+      console.log("All users in room after leaving: ", roomUserMapping);
 
       io.to(roomId).emit(
         "update",

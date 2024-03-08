@@ -16,9 +16,8 @@ import {
 } from '@mui/material';
 import { ReactIcon } from 'components/molecules';
 import { ListItemIconStyle, ListItemStyle } from './styles';
-// import { useSelector } from 'react-redux';
 
-const LightTooltip = styled(({ className, ...props }) => (
+export const LightTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
     [`& .${tooltipClasses.tooltip}`]: {
