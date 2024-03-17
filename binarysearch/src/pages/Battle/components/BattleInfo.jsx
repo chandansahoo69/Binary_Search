@@ -5,37 +5,37 @@ import { useParams } from 'react-router-dom';
 import { socket } from 'socket/socket';
 import { useSelector } from 'react-redux';
 
-export const BattleInfo = () => {
+export const BattleInfo = ({ users }) => {
     const theme = useTheme();
     const [isOpenChat, setIsOpenChat] = useState(false);
 
-    const { id: roomId } = useParams();
-    const { user } = useSelector((state) => state.auth);
-    const [users, setUsers] = useState([]);
+    // const { id: roomId } = useParams();
+    // const { user } = useSelector((state) => state.auth);
+    // const [users, setUsers] = useState([]);
 
-    useEffect(() => {
-        socket.connect();
+    // useEffect(() => {
+    //     socket.connect();
 
-        const currentUser = {
-            _id: user?._id,
-            username: user?.username,
-            avatar: user?.avatar,
-            email: user?.email,
-        };
+    //     const currentUser = {
+    //         _id: user?._id,
+    //         username: user?.username,
+    //         avatar: user?.avatar,
+    //         email: user?.email,
+    //     };
 
-        socket.on('update', (message, users) => {
-            console.log('update -> ', message, users);
-            setUsers(users);
-        });
+    //     socket.on('update', (message, users) => {
+    //         console.log('update -> ', message, users);
+    //         setUsers(users);
+    //     });
 
-        socket.emit('joinRoom', roomId, currentUser);
+    //     socket.emit('joinRoom', roomId, currentUser);
 
-        return () => {
-            socket.emit('leaveRoom', roomId, currentUser);
+    //     return () => {
+    //         socket.emit('leaveRoom', roomId, currentUser);
 
-            socket.disconnect();
-        };
-    }, []);
+    //         socket.disconnect();
+    //     };
+    // }, []);
 
     return (
         <>
