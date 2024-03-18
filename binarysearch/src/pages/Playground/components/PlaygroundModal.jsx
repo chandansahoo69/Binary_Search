@@ -602,7 +602,7 @@ export const PlaygroundModal = ({ open, handleClose }) => {
                         <CustomButton
                             text="Let's Go"
                             type="contained"
-                            width={isMobile ? '30%' : '20%'}
+                            width={isMobile ? '50%' : '20%'}
                             bgColor={theme.palette.button.background}
                             textColor={theme.palette.button.color}
                             icon={'maki:arrow'}

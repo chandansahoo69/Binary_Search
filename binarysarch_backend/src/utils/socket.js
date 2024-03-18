@@ -4,7 +4,6 @@ import { initializedRoomSocket } from "../socket/room.socketTest.js";
 
 let io;
 let socket;
-let roomUserMapping = {};
 
 const initializeSocket = (server, options) => {
   io = new Server(server, {
