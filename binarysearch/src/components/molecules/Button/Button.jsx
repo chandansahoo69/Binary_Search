@@ -22,12 +22,13 @@ const CustomButton = ({
                 width: width || 'full',
                 backgroundColor: type === 'text' ? '' : bgColor || theme.palette.primary.main,
                 color: textColor || type !== 'text' ? textColor : theme.palette.primary.main,
-                borderRadius: '8px',
+                borderRadius: '6px',
+                borderColor: type === 'outlined' ? theme.palette.error.main : 'transparent',
                 boxShadow: 'none',
                 ...otherStyle,
             }}
             variant={type}
-            onClick={onClick}
+            onClick={(e) => onClick && onClick(e)}
         >
             {text}
             {icon && (

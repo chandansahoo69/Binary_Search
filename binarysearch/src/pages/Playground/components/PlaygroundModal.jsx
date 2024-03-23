@@ -155,7 +155,7 @@ export const PlaygroundModal = ({ open, handleClose }) => {
         const args = {
             title: playground,
             type: tab ? 'private' : 'public',
-            startDate: new Date(),
+            startDate: new Date(startDate),
             startTime: formatTime(startTime?.$d),
             noOfUsers: 4,
             noOfQuestions: noOfQuestions,

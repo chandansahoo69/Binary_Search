@@ -32,3 +32,18 @@ export const searchUsers = async (args) => {
     const response = await privateApi.get(`/users/search?user=${args}`);
     return response;
 };
+
+export const getNotifications = async (args) => {
+    const response = await privateApi.get(`/notifications`);
+    return response;
+};
+
+export const getEvents = async (args) => {
+    const response = await privateApi.get(`/events/get-events`);
+    return response;
+};
+
+export const createEvent = async (args) => {
+    const response = await privateApi.post(`/events/create-event`, args);
+    return response;
+};

@@ -1,47 +1,83 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, IconButton, Popover, Typography, useTheme } from '@mui/material';
 import { ReactIcon } from 'components/molecules';
 
 import NotificationItem from './NotificationItem';
 import { useNavigate } from 'react-router-dom';
+import { socket } from 'socket/socket';
+import { useSelector } from 'react-redux';
+import { createEvent, getNotifications } from 'services/RoomApiRequests';
+import { useToast } from 'hooks';
 
 const Notifications = () => {
     const theme = useTheme();
     const navigate = useNavigate();
+    const { showToast } = useToast();
+    const { user } = useSelector((state) => state.auth);
     const [notificationAnchor, setNotificationAnchor] = useState(null);
 
-    const notifications = [
-        {
-            id: 1,
-            notificationData: {
-                content: `Krishna created a new playground.`,
-                link: '/profile',
-                type: 'playground',
-                isRead: false,
-            },
-            modifiedDate: 1693675092,
-        },
-        {
-            id: 1,
-            notificationData: {
-                content: `Adam O'Neill mentioned you in a comment.`,
-                link: '/profile',
-                type: 'comment',
-                isRead: true,
-            },
-            modifiedDate: 1693675092,
-        },
-        {
-            id: 1,
-            notificationData: {
-                content: `You have a new follower!`,
-                link: '/profile',
-                type: 'follower',
-                isRead: true,
-            },
-            modifiedDate: 1693675092,
-        },
-    ];
+    const [notifications, setNotifications] = useState([]);
+
+    const fetchNotifications = async () => {
+        try {
+            const { data: response } = await getNotifications();
+            console.log('notifications', response?.data);
+            setNotifications([...notifications, ...response?.data]);
+        } catch (error) {
+            showToast(error?.message, 'error');
+        }
+    };
+
+    useEffect(() => {
+        if (!user) return;
+
+        socket.connect();
+
+        socket.emit('joinNotification', user._id);
+
+        socket.on('notification', (data) => {
+            console.log('notification -> ', data);
+            fetchNotifications();
+        });
+
+        const handleWindowClose = () => {
+            socket.emit('leaveNotification', user._id);
+            socket.off('notification');
+            socket.disconnect();
+        };
+
+        window.addEventListener('beforeunload', handleWindowClose);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleWindowClose);
+        };
+    }, [socket, user]);
+
+    useEffect(() => {
+        fetchNotifications();
+    }, []);
+
+    const handleAddToCalendar = async (e, notification, index) => {
+        e.stopPropagation();
+
+        const args = {
+            title: notification?.content,
+            details: notification?.details,
+            startDate: new Date(notification?.details?.startDate),
+            creator: notification?.from._id,
+            notficationId: notification?._id,
+        };
+
+        try {
+            const { data: response } = await createEvent(args);
+            let newNotifications = [...notifications];
+            newNotifications[index] = response?.data;
+            setNotifications(newNotifications);
+            showToast(response?.message, 'success');
+        } catch (error) {
+            showToast(error?.message, 'error');
+        }
+    };
 
     const handleOpenNotifications = (event) => {
         setNotificationAnchor(event.currentTarget);
@@ -150,7 +186,12 @@ const Notifications = () => {
                     </Box>
                     <Box className="navbar-action-box">
                         {notifications.map((notification, index) => (
-                            <NotificationItem key={index} notification={notification} />
+                            <NotificationItem
+                                key={index}
+                                index={index}
+                                notification={notification}
+                                handleAddToCalendar={handleAddToCalendar}
+                            />
                         ))}
                     </Box>
                 </Box>

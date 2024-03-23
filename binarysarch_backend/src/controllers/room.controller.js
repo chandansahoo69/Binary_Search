@@ -1,13 +1,10 @@
 import { RoomSchema } from "../models/room.modal.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { sendNotification } from "../utils/notification.js";
 import { getIO } from "../utils/socket.js";
 import { generateQuestions } from "./question.controller.js";
 
 const testingConnection = asyncHandler(async (req, res) => {
-  //   getIO().emit(
-  //     "testing",
-  //     "Connection Successful with socket id->>>> " + socket.id
-  //   );
   const io = getIO();
 
   console.log("io", io);
@@ -29,7 +26,7 @@ const createRoom = asyncHandler(async (req, res) => {
   try {
     const questionIds = await generateQuestions(difficultyLevel, noOfQuestions);
 
-    const room = await RoomSchema.create({
+    await RoomSchema.create({
       title,
       type,
       startDate,
@@ -40,6 +37,29 @@ const createRoom = asyncHandler(async (req, res) => {
       createdBy: req.user._id,
       invitedUsers,
     });
+
+    if (type === "private") {
+      console.log("wrong date", startDate);
+      // send real-time notification to user
+
+      const roomDetails = {
+        title,
+        difficultyLevel,
+        challangeTime,
+        startDate,
+        noOfUsers,
+        createdBy: req.user._id,
+      };
+
+      sendNotification(
+        invitedUsers,
+        req.user._id,
+        `You have been invited to join a room.`,
+        "event-invitation",
+        roomDetails,
+        "notification"
+      );
+    }
 
     return res
       .status(200)

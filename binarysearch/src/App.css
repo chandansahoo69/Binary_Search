@@ -110,6 +110,20 @@ body {
     align-items: flex-end;
 }
 
+.notification-sender {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 50px;
+}
+
+.notification-action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 45px;
+}
+
 /* ---- DASHBOARD ---- */
 
 .main {

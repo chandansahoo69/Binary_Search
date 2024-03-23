@@ -44,11 +44,15 @@ initializeSocket(server, {
 import userRouter from "./routes/user.routes.js";
 import roomRouter from "./routes/room.routes.js";
 import questionRouter from "./routes/question.routes.js";
+import notificationRouter from "./routes/notification.routes.js";
+import eventRouter from "./routes/event.routes.js";
 
 // routes declaration
 app.use(`${process.env.CONFIG_PATH}/users`, userRouter);
 app.use(`${process.env.CONFIG_PATH}/room`, roomRouter);
 app.use(`${process.env.CONFIG_PATH}/question`, questionRouter);
+app.use(`${process.env.CONFIG_PATH}`, notificationRouter);
+app.use(`${process.env.CONFIG_PATH}/events`, eventRouter);
 // app.use(`${process.env.PUBLIC_CONFIG_PATH}/users`, userRouter);
 
 export { app, server };

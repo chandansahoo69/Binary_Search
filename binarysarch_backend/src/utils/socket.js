@@ -14,6 +14,14 @@ const initializeSocket = (server, options) => {
   io.on("connection", (socket) => {
     console.log("A user connected", socket.id);
 
+    socket.on("joinNotification", (userId) => {
+      socket.join(userId);
+    });
+
+    socket.on("leaveNotification", (userId) => {
+      socket.leave(userId);
+    });
+
     initializedRoomSocket(socket);
 
     socket.on("disconnect", () => {
