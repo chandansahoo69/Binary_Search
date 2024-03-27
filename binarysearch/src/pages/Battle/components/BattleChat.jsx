@@ -16,7 +16,7 @@ export const BattleChat = ({ isOpenChat, setIsOpenChat }) => {
                     transform: isOpenChat ? 'translate(0px)' : 'translate(450px)',
                 }}
             >
-                <div class="chatbot">
+                <div className="chatbot">
                     <div className="chatbot-header">
                         <h2>Chat Room</h2>
                         <IconButton
@@ -83,7 +83,7 @@ export const BattleChat = ({ isOpenChat, setIsOpenChat }) => {
                         <textarea
                             style={{ backgroundColor: theme.palette.chat.secondary }}
                             placeholder="Enter a message..."
-                            spellcheck="false"
+                            spellCheck="false"
                             required
                         ></textarea>
 

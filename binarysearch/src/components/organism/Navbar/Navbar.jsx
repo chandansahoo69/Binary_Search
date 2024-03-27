@@ -161,8 +161,8 @@ const Navbar = ({ isOpenSidebar, onOpenSideBar }) => {
                                 />
                             </IconButton>
                             <Popover
-                                id={Boolean(profileAnchor)}
-                                open={Boolean(profileAnchor) ? 'simple-popover' : undefined}
+                                id={Boolean(profileAnchor) ? 'profile-popover' : undefined}
+                                open={Boolean(profileAnchor)}
                                 anchorEl={profileAnchor}
                                 onClose={handleCloseProfile}
                                 anchorOrigin={{

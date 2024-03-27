@@ -21,7 +21,6 @@ const Notifications = () => {
     const fetchNotifications = async () => {
         try {
             const { data: response } = await getNotifications();
-            console.log('notifications', response?.data);
             setNotifications([...notifications, ...response?.data]);
         } catch (error) {
             showToast(error?.message, 'error');
@@ -36,7 +35,6 @@ const Notifications = () => {
         socket.emit('joinNotification', user._id);
 
         socket.on('notification', (data) => {
-            console.log('notification -> ', data);
             fetchNotifications();
         });
 
@@ -59,7 +57,6 @@ const Notifications = () => {
 
     const handleAddToCalendar = async (e, notification, index) => {
         e.stopPropagation();
-
         const args = {
             title: notification?.content,
             details: notification?.details,
@@ -114,8 +111,8 @@ const Notifications = () => {
                 />
             </IconButton>
             <Popover
-                id={Boolean(notificationAnchor)}
-                open={Boolean(notificationAnchor) ? 'simple-popover' : undefined}
+                id={Boolean(notificationAnchor) ? 'simple-popover' : undefined}
+                open={Boolean(notificationAnchor)}
                 anchorEl={notificationAnchor}
                 onClose={handleCloseNotifications}
                 anchorOrigin={{

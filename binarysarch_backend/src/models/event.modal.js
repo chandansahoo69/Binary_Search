@@ -11,6 +11,15 @@ const eventSchema = new Schema(
     details: { type: Object },
     startDate: { type: Date, default: new Date() },
     // endDate: { type: Date, default: new Date() },
+    type: {
+      type: String,
+      enum: [
+        "friend-request",
+        "friend-request-accepted",
+        "event-invitation",
+        "event-reminder",
+      ],
+    },
     createdBy: { type: Schema.Types.ObjectId, ref: "User" },
     owner: { type: Schema.Types.ObjectId, ref: "User" },
     // invitedUsers: [{ type: Schema.Types.ObjectId, ref: "User" }],

@@ -132,8 +132,8 @@ export const SingleNavbar = () => {
                                 />
                             </IconButton>
                             <Popover
-                                id={Boolean(profileAnchor)}
-                                open={Boolean(profileAnchor) ? 'simple-popover' : undefined}
+                                id={Boolean(profileAnchor) ? 'simple-popover' : undefined}
+                                open={Boolean(profileAnchor)}
                                 anchorEl={profileAnchor}
                                 onClose={handleCloseProfile}
                                 anchorOrigin={{

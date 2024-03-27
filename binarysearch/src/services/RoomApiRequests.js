@@ -1,6 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
 import { privateApi } from 'api/http';
-import toast from 'react-hot-toast';
 
 // export const getRooms = createAsyncThunk('rooms/getRooms', async (args, { rejectWithValue }) => {
 //     try {

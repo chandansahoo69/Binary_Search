@@ -10,7 +10,7 @@ export const Loader = () => {
                 padding: '100px 0',
             }}
         >
-            <span class="loader"></span>
+            <span className="loader"></span>
         </div>
     );
 };

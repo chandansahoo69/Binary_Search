@@ -4,15 +4,21 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 const getEvents = asyncHandler(async (req, res) => {
   try {
+    const { month } = req.params;
+
+    const numericMonth = parseInt(month, 10);
+
     const events = await Events.find({
+      $expr: {
+        $eq: [{ $month: "$startDate" }, numericMonth],
+      },
       owner: req.user._id,
-    })
-      .populate({ path: "createdBy", select: "username avatar" })
-      .sort({ createdAt: -1 });
+    }).sort({ startDate: 1 });
 
     return res.status(200).json({
       success: true,
       data: events,
+      message: "Events fetched successfully",
     });
   } catch (error) {
     return res
@@ -24,7 +30,7 @@ const getEvents = asyncHandler(async (req, res) => {
 const createEvent = asyncHandler(async (req, res) => {
   try {
     const { title, details, startDate, creator, notficationId } = req.body;
-    console.log("req.body", req.body);
+
     await Events.create({
       title,
       details,
@@ -40,8 +46,6 @@ const createEvent = asyncHandler(async (req, res) => {
     )
       .populate({ path: "from", select: "username avatar" })
       .select("-to");
-
-    console.log("notification", notification);
 
     return res.status(200).json({
       success: true,

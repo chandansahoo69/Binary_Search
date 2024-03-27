@@ -668,9 +668,9 @@ body {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 10px;
-    margin: 15px 0;
-    border-top: 2px solid #74787f7a;
-    border-bottom: 2px solid #74787f7a;
+    margin-bottom: 12px;
+    border-top: 1px solid #9d9e9f7a;
+    border-bottom: 1px solid #74787f7a;
     padding: 10px 0;
 }
 
@@ -701,18 +701,41 @@ body {
     border: 2px solid rgb(244, 42, 6);
 }
 
+.event-popover-close-icon-container {
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+}
+
+.event-popover-close-icon {
+    position: absolute;
+    right: -7px;
+    top: -7px;
+    cursor: pointer;
+}
+
+.more-events-date {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
 .event-calendar-event {
     font-size: smaller;
     border-radius: 8px;
     margin: 1px 0;
+    /* min-width: 60px; */
+    overflow: hidden;
+    white-space: nowrap; /* Don't forget this one */
+    text-overflow: ellipsis;
     gap: 10px;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
 }
 
 .event-calendar-event-small {
-    width: 5px;
-    height: 5px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
 }
 

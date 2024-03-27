@@ -5,6 +5,6 @@ import { createEvent, getEvents } from "../controllers/event.controller.js";
 const router = Router();
 
 router.post("/create-event", verifyJWT, createEvent);
-router.get("/get-events", verifyJWT, getEvents);
+router.get("/get-events/:month", verifyJWT, getEvents);
 
 export default router;

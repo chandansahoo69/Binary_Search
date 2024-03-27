@@ -26,7 +26,7 @@ const createRoom = asyncHandler(async (req, res) => {
   try {
     const questionIds = await generateQuestions(difficultyLevel, noOfQuestions);
 
-    await RoomSchema.create({
+    const room = await RoomSchema.create({
       title,
       type,
       startDate,
@@ -39,10 +39,10 @@ const createRoom = asyncHandler(async (req, res) => {
     });
 
     if (type === "private") {
-      console.log("wrong date", startDate);
       // send real-time notification to user
 
       const roomDetails = {
+        _id: room._id,
         title,
         difficultyLevel,
         challangeTime,
