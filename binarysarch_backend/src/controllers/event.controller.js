@@ -29,11 +29,13 @@ const getEvents = asyncHandler(async (req, res) => {
 
 const createEvent = asyncHandler(async (req, res) => {
   try {
-    const { title, details, startDate, creator, notficationId } = req.body;
+    const { title, details, type, startDate, creator, notficationId } =
+      req.body;
 
     await Events.create({
       title,
       details,
+      type,
       startDate,
       createdBy: creator,
       owner: req.user._id,

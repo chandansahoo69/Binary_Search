@@ -26,6 +26,21 @@ export const getRoom = async (args) => {
     return response;
 };
 
+export const startWar = async (args) => {
+    const response = await privateApi.post(`/room/start-war`, args);
+    return response;
+};
+
+export const compileCode = async (args) => {
+    const response = await privateApi.post(`/room/compile-code`, args);
+    return response;
+};
+
+export const submitCode = async (args) => {
+    const response = await privateApi.post(`/room/submit-code`, args);
+    return response;
+};
+
 export const searchUsers = async (args) => {
     const response = await privateApi.get(`/users/search?user=${args}`);
     return response;

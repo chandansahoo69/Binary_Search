@@ -25,6 +25,8 @@ const roomSchema = new Schema(
     point: { type: Number, default: 10 },
     createdBy: { type: Schema.Types.ObjectId, ref: "User" },
     isContestOver: { type: Boolean, default: false },
+    isWarStarted: { type: Boolean, default: false },
+    warStartTime: { type: Date, default: null },
     connectedUsers: [connectedUserSchema],
     questions: [{ type: Schema.Types.ObjectId, ref: "Question" }],
     invitedUsers: [{ type: Schema.Types.ObjectId, ref: "User" }],

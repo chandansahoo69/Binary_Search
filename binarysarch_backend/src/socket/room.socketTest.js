@@ -37,27 +37,35 @@ const initializedRoomSocket = (socket) => {
   });
 
   socket.on("leaveRoom", async (roomId, user) => {
-    console.log("leaveRoom", roomId, user?.username);
+    console.log("leaveRoom", roomId, user?._id);
 
     try {
       socket.leave(roomId);
 
       if (roomUserMapping[roomId]) {
         // Find the user object in the set and delete it
+        console.log("User to delete: ", roomUserMapping[roomId]);
         roomUserMapping[roomId].forEach((userData) => {
           if (userData._id === user._id) {
             roomUserMapping[roomId].delete(userData);
           }
         });
+
+        // delete the room from the mapping if no users are left
+        if (roomUserMapping[roomId].size === 0) {
+          delete roomUserMapping[roomId];
+        }
       }
 
       console.log("All users in room after leaving: ", roomUserMapping);
 
-      io.to(roomId).emit(
-        "update",
-        `User ${user?.username} left the room`,
-        Array.from(roomUserMapping[roomId])
-      );
+      if (roomUserMapping[roomId]) {
+        io.to(roomId).emit(
+          "update",
+          `User ${user?.username} left the room`,
+          Array.from(roomUserMapping[roomId])
+        );
+      }
     } catch (error) {
       console.log("Error while leaving room: ", error);
       return io.emit("error", "Something went wrong while leaving the room");
@@ -65,4 +73,8 @@ const initializedRoomSocket = (socket) => {
   });
 };
 
-export { initializedRoomSocket };
+const getRoomUserMapping = () => {
+  return roomUserMapping;
+};
+
+export { initializedRoomSocket, getRoomUserMapping };

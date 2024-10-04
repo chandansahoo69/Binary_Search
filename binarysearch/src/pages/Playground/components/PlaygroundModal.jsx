@@ -72,7 +72,7 @@ const config = {
     separator: '-',
 };
 
-export const PlaygroundModal = ({ open, handleClose }) => {
+export const PlaygroundModal = ({ open, handleClose, fetchRooms }) => {
     const theme = useTheme();
     const { showToast } = useToast();
     const isMobile = useResponsive('down', 'sm', '', '');
@@ -170,13 +170,10 @@ export const PlaygroundModal = ({ open, handleClose }) => {
             await createRoom(args);
             showToast('Room created successfully', 'success');
             handleClose();
+            fetchRooms();
         } catch (error) {
-            const formattedError = error.format();
-            Object.values(formattedError).forEach((err) => {
-                if (err && err._errors) {
-                    showToast(err._errors, 'error');
-                }
-            });
+            console.log(error);
+            showToast(error.response.data.data, 'error');
         }
     };
 
@@ -271,6 +268,7 @@ export const PlaygroundModal = ({ open, handleClose }) => {
                             >
                                 {tabs.map((tabItem, index) => (
                                     <div
+                                        key={index}
                                         className="tab"
                                         style={{
                                             textTransform: 'capitalize',

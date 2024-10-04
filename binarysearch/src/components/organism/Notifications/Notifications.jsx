@@ -60,6 +60,7 @@ const Notifications = () => {
         const args = {
             title: notification?.content,
             details: notification?.details,
+            type: notification?.type,
             startDate: new Date(notification?.details?.startDate),
             creator: notification?.from._id,
             notficationId: notification?._id,

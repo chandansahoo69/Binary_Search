@@ -56,16 +56,17 @@ const Playground = () => {
         setTab(newTab);
     };
 
+    const fetchRooms = async () => {
+        try {
+            const { data: response } = await getRooms();
+            // console.log('response in playground', response?.data);
+            setRooms(response?.data);
+        } catch (error) {
+            showToast(error?.message, 'error');
+        }
+    };
+
     useEffect(() => {
-        const fetchRooms = async () => {
-            try {
-                const { data: response } = await getRooms();
-                // console.log('response in playground', response?.data);
-                setRooms(response?.data);
-            } catch (error) {
-                showToast(error?.message, 'error');
-            }
-        };
         fetchRooms();
     }, []);
 
@@ -92,26 +93,6 @@ const Playground = () => {
                     />
                 </div>
 
-                {/* <div>
-                    <h1>Rooms</h1>
-                    <ul style={{ display: 'flex', gap: '20px' }}>
-                        {playgrounds.map((playground, index) => (
-                            <CustomButton
-                                text={playground.title + ' ' + index}
-                                width={'auto'}
-                                height={'30px'}
-                                type="contained"
-                                otherStyle={{
-                                    borderRadius: '30px',
-                                }}
-                                key={index}
-                                onClick={() => handleJoinRoom(playground.id)}
-                            >
-                                {playground.title}
-                            </CustomButton>
-                        ))}
-                    </ul>
-                </div> */}
                 <div
                     className="playground-box-container"
                     style={{
@@ -191,99 +172,75 @@ const Playground = () => {
                     </div>
 
                     {rooms ? (
-                        <div className="playground-main-container">
-                            {rooms?.map((item, index) => (
-                                <ListItemButton
-                                    key={index}
-                                    className="playground-box"
-                                    sx={{
-                                        backgroundColor: theme.palette.card.background,
-                                        border: `2px solid ${theme.palette.popover.border}`,
-                                        alignItems: 'flex-start',
-                                    }}
-                                >
-                                    <div className="playground-box-header">
-                                        <Typography
-                                            className="playground-box-header-title"
-                                            sx={{
-                                                fontSize: isMobile
-                                                    ? theme.typography.h5.fontSize
-                                                    : theme.typography.h4.fontSize,
-                                                fontWeight: theme.typography.fontWeightMedium,
-                                            }}
-                                        >
-                                            {item?.title}
-                                        </Typography>
-                                        <div className="playground-box-header-subtitle">
-                                            <span
-                                                className="playground-tag"
-                                                style={{
-                                                    backgroundColor:
-                                                        theme.palette.tags[item?.difficultyLevel],
-                                                }}
-                                            >
-                                                {item?.difficultyLevel}
-                                            </span>
+                        <>
+                            <div className="playground-main-container">
+                                {rooms?.map((item, index) => (
+                                    <ListItemButton
+                                        key={index}
+                                        className="playground-box"
+                                        sx={{
+                                            backgroundColor: theme.palette.card.background,
+                                            border: `2px solid ${theme.palette.popover.border}`,
+                                            alignItems: 'flex-start',
+                                        }}
+                                    >
+                                        <div className="playground-box-header">
                                             <Typography
-                                                sx={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '5px',
-                                                    fontSize: theme.typography.body2.fontSize,
-                                                    fontWeight: theme.typography.fontWeightRegular,
-                                                }}
-                                            >
-                                                <ReactIcon
-                                                    icon={`mdi:timer-outline`}
-                                                    color={theme.palette.icon.primary}
-                                                    height={18}
-                                                    width={18}
-                                                />
-                                                {item?.challangeTime} M
-                                            </Typography>
-                                        </div>
-                                    </div>
-                                    <div className="playground-box-body">
-                                        <div className="playground-box-user">
-                                            <Avatar
-                                                alt="user_profile"
-                                                src={item?.createdBy?.avatar || userProfileDemo}
-                                                sx={{
-                                                    border: `2px solid ${theme.palette.primary.main}`,
-                                                    width: '34px',
-                                                    height: '34px',
-                                                }}
-                                            />
-                                            <Typography
+                                                className="playground-box-header-title"
                                                 sx={{
                                                     fontSize: isMobile
-                                                        ? theme.typography.body2.fontSize
-                                                        : theme.typography.body1.fontSize,
-                                                    fontWeight: theme.typography.fontWeightRegular,
+                                                        ? theme.typography.h5.fontSize
+                                                        : theme.typography.h4.fontSize,
+                                                    fontWeight: theme.typography.fontWeightMedium,
                                                 }}
                                             >
-                                                {item?.createdBy?.username}
+                                                {item?.title}
                                             </Typography>
-                                        </div>
-                                        <div className="playground-box-body-description">
-                                            <Typography
-                                                sx={{
-                                                    fontSize: isMobile
-                                                        ? theme.typography.body2.fontSize
-                                                        : theme.typography.body1.fontSize,
-                                                    fontWeight: theme.typography.fontWeightRegular,
-                                                }}
-                                            >
-                                                {item?.description}
-                                            </Typography>
-                                        </div>
-                                        <div className="playground-extra-information">
-                                            <div className="playground-extra-information-user">
+                                            <div className="playground-box-header-subtitle">
+                                                <span
+                                                    className="playground-tag"
+                                                    style={{
+                                                        backgroundColor:
+                                                            theme.palette.tags[
+                                                                item?.difficultyLevel
+                                                            ],
+                                                    }}
+                                                >
+                                                    {item?.difficultyLevel}
+                                                </span>
                                                 <Typography
                                                     sx={{
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         gap: '5px',
+                                                        fontSize: theme.typography.body2.fontSize,
+                                                        fontWeight:
+                                                            theme.typography.fontWeightRegular,
+                                                    }}
+                                                >
+                                                    <ReactIcon
+                                                        icon={`mdi:timer-outline`}
+                                                        color={theme.palette.icon.primary}
+                                                        height={18}
+                                                        width={18}
+                                                    />
+                                                    {item?.challangeTime} M
+                                                </Typography>
+                                            </div>
+                                        </div>
+                                        <div className="playground-box-body">
+                                            <div className="playground-box-user">
+                                                <Avatar
+                                                    alt="user_profile"
+                                                    src={item?.createdBy?.avatar || userProfileDemo}
+                                                    sx={{
+                                                        border: `2px solid ${theme.palette.primary.main}`,
+                                                        width: '34px',
+                                                        height: '34px',
+                                                    }}
+                                                />
+                                                <Typography
+                                                    sx={{
                                                         fontSize: isMobile
                                                             ? theme.typography.body2.fontSize
                                                             : theme.typography.body1.fontSize,
@@ -291,32 +248,75 @@ const Playground = () => {
                                                             theme.typography.fontWeightRegular,
                                                     }}
                                                 >
-                                                    <ReactIcon
-                                                        icon={`tdesign:user`}
-                                                        color={theme.palette.icon.primary}
-                                                        height={18}
-                                                        width={18}
-                                                    />
-                                                    {item?.noOfUsers}
+                                                    {item?.createdBy?.username}
                                                 </Typography>
                                             </div>
-                                            <div className="playground-extra-information-button">
-                                                <CustomButton
-                                                    text="Join"
-                                                    width={'100%'}
-                                                    height={'30px'}
-                                                    type="contained"
-                                                    otherStyle={{
-                                                        borderRadius: '30px',
+                                            <div className="playground-box-body-description">
+                                                <Typography
+                                                    sx={{
+                                                        fontSize: isMobile
+                                                            ? theme.typography.body2.fontSize
+                                                            : theme.typography.body1.fontSize,
+                                                        fontWeight:
+                                                            theme.typography.fontWeightRegular,
                                                     }}
-                                                    onClick={() => handleJoinRoom(item._id)}
-                                                />
+                                                >
+                                                    {item?.description}
+                                                </Typography>
+                                            </div>
+                                            <div className="playground-extra-information">
+                                                <div className="playground-extra-information-user">
+                                                    <Typography
+                                                        sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: '5px',
+                                                            fontSize: isMobile
+                                                                ? theme.typography.body2.fontSize
+                                                                : theme.typography.body1.fontSize,
+                                                            fontWeight:
+                                                                theme.typography.fontWeightRegular,
+                                                        }}
+                                                    >
+                                                        <ReactIcon
+                                                            icon={`tdesign:user`}
+                                                            color={theme.palette.icon.primary}
+                                                            height={18}
+                                                            width={18}
+                                                        />
+                                                        {item?.noOfUsers}
+                                                    </Typography>
+                                                </div>
+                                                <div className="playground-extra-information-button">
+                                                    <CustomButton
+                                                        text="Join"
+                                                        width={'100%'}
+                                                        height={'30px'}
+                                                        type="contained"
+                                                        otherStyle={{
+                                                            borderRadius: '30px',
+                                                        }}
+                                                        onClick={() => handleJoinRoom(item._id)}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </ListItemButton>
-                            ))}
-                        </div>
+                                    </ListItemButton>
+                                ))}
+                            </div>
+                            {rooms?.length === 0 && (
+                                <Typography
+                                    sx={{
+                                        fontSize: theme.typography.h4.fontSize,
+                                        fontWeight: theme.typography.fontWeightRegular,
+                                        textAlign: 'center',
+                                        margin: '20px 0',
+                                    }}
+                                >
+                                    No rooms found
+                                </Typography>
+                            )}
+                        </>
                     ) : (
                         <Loader />
                     )}
@@ -326,6 +326,7 @@ const Playground = () => {
                 <PlaygroundModal
                     open={openPlaygroundModal}
                     handleClose={handleClosePlaygroundModal}
+                    fetchRooms={fetchRooms}
                 />
             )}
         </>

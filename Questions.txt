@@ -1,0 +1,17 @@
+<!-- Check weather number is even -->
+http://localhost:3000/battle/65f85e52e211343ba9be45c7
+#include <iostream>
+using namespace std;
+
+int main() {
+  int n;
+  cin >> n;
+
+  if (n % 2 == 0)
+    cout << "Yes";
+  else
+    cout << "No";
+
+  return 0;
+}
+2

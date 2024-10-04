@@ -7,6 +7,7 @@ import { useResponsive, useToast } from 'hooks';
 import { getEvents } from 'services/EventApiRequests';
 import { ColorModeContext } from 'theme';
 import moment from 'moment';
+import copy from 'copy-to-clipboard';
 
 export const EventCalendar = ({}) => {
     const isMobile = useResponsive('down', 'sm', '', '');
@@ -31,6 +32,11 @@ export const EventCalendar = ({}) => {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [todaysMoreEvents, setTodaysMoreEvents] = useState([]);
     const [moreEventsDate, setMoreEventsDate] = useState(null);
+
+    const copyToClipboard = () => {
+        copy(window.location.href);
+        showToast('URL copied to clipboard', 'success');
+    };
 
     const changePreviousMonth = () => {
         let previousMonth = new Date(currentDate.setMonth(currentDate.getMonth() - 1));
@@ -64,6 +70,10 @@ export const EventCalendar = ({}) => {
                 end: endOfMonth(currentDate),
             })
         );
+
+        return () => {
+            console.log('check clean up function ->');
+        };
     }, [currentDate]);
 
     const eventsByDate = useMemo(() => {
@@ -76,6 +86,7 @@ export const EventCalendar = ({}) => {
             return acc;
         }, {});
     }, [events]);
+    console.log('events -> ', eventsByDate);
 
     const [eventAnchorEl, setEventAnchorEl] = useState(null);
     const [moreEventsAnchorEl, setMoreEventsAnchorEl] = useState(null);
@@ -180,8 +191,14 @@ export const EventCalendar = ({}) => {
                             const dateKey = format(day, 'yyyy-MM-dd');
                             const todaysEvents = eventsByDate[dateKey] || [];
 
-                            const noOfEventsToShow = isDesktop ? 2 : isTablet ? 1 : 4;
+                            {
+                                /* console.log('todaysEvents -> ', todaysEvents); */
+                            }
 
+                            const noOfEventsToShow = isDesktop ? 2 : isTablet ? 1 : 4;
+                            {
+                                /* console.log('noOfEventsToShow -> ', noOfEventsToShow); */
+                            }
                             return (
                                 <div
                                     key={index}
@@ -439,19 +456,19 @@ export const EventCalendar = ({}) => {
                             display: 'flex',
                             alignItems: 'center',
                             gap: '3px',
-                            marginTop: '5px',
+                            marginTop: '15px',
                         }}
                     >
                         <ReactIcon
                             icon={'iconamoon:location'}
                             color={theme.palette.icon.primary}
                             sx={{ cursor: 'pointer' }}
-                            height={18}
-                            width={18}
+                            height={'40px'}
+                            width={'40px'}
                         />
-                        <Typography
+                        <div
                             variant="body2"
-                            sx={{
+                            style={{
                                 color: theme.palette.text.secondary,
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
@@ -459,8 +476,18 @@ export const EventCalendar = ({}) => {
                                 paddingRight: '10px',
                             }}
                         >
-                            {selectedEvent?.title} min
-                        </Typography>
+                            {`${window.location.origin}/battle/${selectedEvent?.details._id}`}
+                        </div>
+                        <ButtonBase sx={{ borderRadius: '5px' }} onClick={copyToClipboard}>
+                            <ReactIcon
+                                className="generic-icon"
+                                icon={'solar:copy-line-duotone'}
+                                color={theme.palette.icon.primary}
+                                sx={{ cursor: 'pointer' }}
+                                // height={'40px'}
+                                // width={'40px'}
+                            />
+                        </ButtonBase>
                     </Box>
                 </Box>
             </Popover>

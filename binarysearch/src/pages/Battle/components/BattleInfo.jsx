@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { socket } from 'socket/socket';
 import { useSelector } from 'react-redux';
 
-export const BattleInfo = ({ users }) => {
+export const BattleInfo = ({ users, roomDetails, handleStartWar }) => {
     const theme = useTheme();
     const [isOpenChat, setIsOpenChat] = useState(false);
 
@@ -41,7 +41,11 @@ export const BattleInfo = ({ users }) => {
         <>
             <div className="battle-info-container">
                 <BattleChat isOpenChat={isOpenChat} setIsOpenChat={setIsOpenChat} />
-                <BattleInfoUserList users={users} />
+                <BattleInfoUserList
+                    users={users}
+                    roomDetails={roomDetails}
+                    handleStartWar={handleStartWar}
+                />
                 <BattleInfoActionButton setIsOpenChat={setIsOpenChat} />
             </div>
         </>
