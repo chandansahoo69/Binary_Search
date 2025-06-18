@@ -163,7 +163,7 @@ export const lightPalette = {
     themeIcon: { color: '#71717a' },
     icon: { primary: '#48505e', secondary: '#7f7e82', default: '#3b3a40' },
     tags: { easy: '#50C878', medium: '#FFC107', hard: '#FF4842' },
-    tab: { background: '#f3f5f9' },
+    tab: { background: '#f5f7f9' },
     sidebar: { background: '#f3f5f9' },
     button: { background: '#191b1c', color: '#fff' },
     tooltip: { background: '#191b1c', color: '#fff' },

@@ -14,6 +14,7 @@ import {
     Select,
     Stack,
     TextField,
+    Tooltip,
     Typography,
     useTheme,
 } from '@mui/material';
@@ -163,6 +164,8 @@ export const PlaygroundModal = ({ open, handleClose, fetchRooms }) => {
             challangeTime: time,
             invitedUsers: selectedUsers.map((user) => user._id),
         };
+
+        console.log('args', args);
 
         try {
             schema.parse(args);
@@ -320,7 +323,7 @@ export const PlaygroundModal = ({ open, handleClose, fetchRooms }) => {
                                         ampm
                                         minTime={
                                             startDate === '' ||
-                                            moment(new Date()).format('yyyy-MM-DD') === startDate
+                                                moment(new Date()).format('yyyy-MM-DD') === startDate
                                                 ? moment(new Date(), 'HH:mm')
                                                 : moment('00:00', 'HH:mm')
                                         }
@@ -351,25 +354,26 @@ export const PlaygroundModal = ({ open, handleClose, fetchRooms }) => {
                                 width={'100%'}
                                 placeholder={'How about doctor-steven-strange'}
                             />
-
-                            <IconButton
-                                size="medium"
-                                sx={{
-                                    backgroundColor: 'transparent',
-                                    borderRadius: '8px',
-                                    '&:hover': {
-                                        backgroundColor: 'action.hover',
-                                    },
-                                }}
-                                onClick={generateUniqueName}
-                            >
-                                <ReactIcon
-                                    icon={'solar:qr-code-bold-duotone'}
-                                    color={theme.palette.common.white}
-                                    height={25}
-                                    width={25}
-                                />
-                            </IconButton>
+                            <Tooltip title="Generate a unique name">
+                                <IconButton
+                                    size="medium"
+                                    sx={{
+                                        backgroundColor: 'transparent',
+                                        borderRadius: '8px',
+                                        '&:hover': {
+                                            backgroundColor: 'action.hover',
+                                        },
+                                    }}
+                                    onClick={generateUniqueName}
+                                >
+                                    <ReactIcon
+                                        icon={'solar:qr-code-bold-duotone'}
+                                        color={theme.palette.common.primary}
+                                        height={25}
+                                        width={25}
+                                    />
+                                </IconButton>
+                            </Tooltip>
                         </div>
 
                         {tab === 1 && (
@@ -571,9 +575,8 @@ export const PlaygroundModal = ({ open, handleClose, fetchRooms }) => {
                                     <Fragment key={index}>
                                         {index >= 0 && (
                                             <div
-                                                className={`playground-modal-time-long-stick ${
-                                                    time >= timeValue && 'long-time-stick-active'
-                                                }`}
+                                                className={`playground-modal-time-long-stick ${time >= timeValue && 'long-time-stick-active'
+                                                    }`}
                                                 onClick={() => setTime(timeValue)}
                                             ></div>
                                         )}
@@ -583,10 +586,9 @@ export const PlaygroundModal = ({ open, handleClose, fetchRooms }) => {
                                                     (_, index) => (
                                                         <div
                                                             key={index}
-                                                            className={`playground-modal-time-stick ${
-                                                                time > timeValue &&
+                                                            className={`playground-modal-time-stick ${time > timeValue &&
                                                                 'time-stick-active'
-                                                            }`}
+                                                                }`}
                                                         ></div>
                                                     )
                                                 )}

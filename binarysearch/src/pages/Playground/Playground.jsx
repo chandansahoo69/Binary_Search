@@ -11,6 +11,8 @@ import { PlaygroundModal } from './components';
 import { getRooms } from 'services/RoomApiRequests';
 import { useSelector } from 'react-redux';
 
+import './playground.css';
+
 import userProfileDemo from 'assets/images/svg/user-profile-demo.svg';
 
 const Playground = () => {
@@ -202,7 +204,7 @@ const Playground = () => {
                                                     style={{
                                                         backgroundColor:
                                                             theme.palette.tags[
-                                                                item?.difficultyLevel
+                                                            item?.difficultyLevel
                                                             ],
                                                     }}
                                                 >
@@ -305,16 +307,22 @@ const Playground = () => {
                                 ))}
                             </div>
                             {rooms?.length === 0 && (
-                                <Typography
-                                    sx={{
-                                        fontSize: theme.typography.h4.fontSize,
-                                        fontWeight: theme.typography.fontWeightRegular,
-                                        textAlign: 'center',
-                                        margin: '20px 0',
-                                    }}
-                                >
-                                    No rooms found
-                                </Typography>
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: theme.palette.background.container, padding: '20px' }}>
+                                    <Typography
+                                        sx={{
+                                            fontSize: theme.typography.h4.fontSize,
+                                            fontWeight: theme.typography.fontWeightRegular,
+                                            textAlign: 'center',
+                                            margin: '20px 0',
+                                        }}
+                                    >
+                                        No rooms found
+
+                                    </Typography>
+                                    <svg className="background-logo w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 11.5h13m-13 0V18a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-6.5m-13 0V9a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v2.5M9 5h11a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-1" />
+                                    </svg>
+                                </div>
                             )}
                         </>
                     ) : (

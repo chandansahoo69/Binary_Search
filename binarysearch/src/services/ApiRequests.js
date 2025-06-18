@@ -27,10 +27,10 @@ export const logout = createAsyncThunk('user/logout', async (args, { rejectWithV
     }
 });
 
-export const signup = createAsyncThunk('user/signup', async ({}, { rejectWithValue }) => {
+export const signup = createAsyncThunk('user/signup', async (args, { rejectWithValue }) => {
     console.log('get user signup thunk');
     try {
-        const response = await privateApi.get('/users/register');
+        const response = await privateApi.post('/users/register', args);
         console.log('response in signup thunk', response);
         return response;
     } catch (error) {

@@ -73,6 +73,7 @@ const Sidebar = ({ isOpenSidebar, onCloseSidebar }) => {
                         sx: {
                             width: isOpenSidebar ? DRAWER_WIDTH : MINI_DRAWER_WIDTH,
                             border: 'none',
+                            transition: 'width 0.3s ease-in-out'
                         },
                     }}
                 >

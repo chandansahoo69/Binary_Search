@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
 import { Typography, useTheme } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 import { FormInput } from 'components/organism';
 import { validateEmail, validatePassword } from 'utils/utilityFunctions';
 import { useError, useResponsive } from 'hooks';
 import { CustomButton } from 'components/molecules';
 import routes from 'config/routes';
+import { signup } from 'services/ApiRequests';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Signup = () => {
     const theme = useTheme();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const isMobile = useResponsive('down', 'sm', '', '');
     const isTablet = useResponsive('down', 'md', '', '');
     const { error, setError } = useError({ type: '', message: '' });
 
     const [inputs, setInputs] = useState({
+        fullName: '',
+        username: '',
         email: '',
         password: '',
     });
@@ -55,7 +61,7 @@ const Signup = () => {
         return true;
     };
 
-    const handleOnSubmit = (e) => {
+    const handleOnSubmit = async (e) => {
         e.preventDefault();
 
         // validation check
@@ -63,6 +69,14 @@ const Signup = () => {
         if (!isValid) return;
 
         console.log('inputs', inputs);
+
+        try {
+            await dispatch(signup(inputs));
+
+            navigate(routes.dashboard.path);
+        } catch (error) {
+            console.log('error', error);
+        }
     };
 
     return (
@@ -97,6 +111,24 @@ const Signup = () => {
                         borderTop: `1px solid ${theme.palette.divider}`,
                     }}
                 >
+                    <FormInput
+                        label={'Full Name'}
+                        name="fullName"
+                        type="text"
+                        placeholder="Enter your full name"
+                        value={inputs.fullName}
+                        onChange={handleOnChange}
+                        error={error}
+                    />
+                    <FormInput
+                        label={'Username'}
+                        name="username"
+                        type="text"
+                        placeholder="Enter your user name"
+                        value={inputs.username}
+                        onChange={handleOnChange}
+                        error={error}
+                    />
                     <FormInput
                         label={'Email'}
                         name="email"
